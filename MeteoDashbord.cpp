@@ -127,3 +127,43 @@ void Bar::setValue(float windspeed){
     tft->fillRect( x + i * (barWidth + barSpace), y, barWidth, barMaxHeight , ILI9341_LIGHTGREY);
   }
 }
+
+LevelIndicator::LevelIndicator(){
+}
+
+LevelIndicator::LevelIndicator(Adafruit_ILI9341 &dsp, int x0, int y0, int W0, int H0, int maxvalue){
+  x = x0, y = y0, W = W0, H = H0;
+  tft = &dsp;
+  barWidth = W/valueCount - barSpace;
+  //barWidth = 10;
+  //barSpace = 2;
+
+  for (int i = 0; i < valueCount; i++){
+    tft->drawRect(x + i*(barWidth + barSpace), y, barWidth, H, ILI9341_WHITE);
+  }
+  //tft->fillRect(x, y + barMaxHeight + 1, valueCount * (barWidth + barSpace) - barSpace, textRectHeight, ILI9341_NAVY);
+}
+
+void LevelIndicator::set(float value){
+  if(value > maxvalue){value = maxvalue;}
+
+  int interval = maxvalue/valueCount;
+  int level = (int)(value/interval + 0.5);
+
+  for (int i = 0; i < valueCount; i++){
+    if (i < level){
+        tft->fillRect(x + i*(barWidth + barSpace), y, barWidth, H, ILI9341_GREENYELLOW);
+    } else {
+        tft->fillRect(x + i*(barWidth + barSpace), y, barWidth, H, ILI9341_BLACK);
+        tft->drawRect(x + i*(barWidth + barSpace), y, barWidth, H, ILI9341_WHITE);
+    }
+  }
+
+  tft->setFont();
+  tft->setTextSize(3);
+  tft->setTextColor(ILI9341_WHITE);
+  tft->setCursor(x + 10 + valueCount*(barWidth + barSpace), y + H/2);
+  tft->print(value, 1);
+  tft->print("m/s");
+
+}
