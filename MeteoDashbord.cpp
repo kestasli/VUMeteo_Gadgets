@@ -1,16 +1,12 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
 #include <MeteoDashboard.h>
-#include <Fonts/FreeSansBold12pt7b.h>
+#include <Fonts/FreeSansBold18pt7b.h>
 //#include <Fonts/FreeSansBold24pt7b.h>
 //#include <Fonts/FreeSansBold56pt7b.h>
 //#include <Fonts/FreeSansBold44pt7b.h>
 
 NumberIndicator::NumberIndicator(){
-}
-
-NumberIndicator::NumberIndicator(Adafruit_ILI9341 &dsp){
-  tft = &dsp;
 }
 
 NumberIndicator::NumberIndicator(Adafruit_ILI9341 &dsp, int x0, int y0){
@@ -22,7 +18,7 @@ NumberIndicator::NumberIndicator(Adafruit_ILI9341 &dsp, int x0, int y0){
   tft->setTextSize(2);
 }
 
-NumberIndicator::NumberIndicator(Adafruit_ILI9341 &dsp, int x0, int y0, GFXfont *font0, int size0){
+NumberIndicator::NumberIndicator(Adafruit_ILI9341 &dsp, int x0, int y0, const GFXfont *font0, int size0){
   tft = &dsp;
   W = tft->width();
   H = tft->height();
@@ -92,7 +88,7 @@ LevelIndicator::LevelIndicator(Adafruit_ILI9341 &dsp, int x0, int y0, int W0, in
   //barWidth = 10;
   //barSpace = 2;
 
-  font = &FreeSansBold12pt7b;
+  font = &FreeSansBold18pt7b;
   fontSize = 1;
   tft->setFont(font);
   tft->setTextSize(fontSize);

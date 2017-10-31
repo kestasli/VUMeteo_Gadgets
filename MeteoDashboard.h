@@ -1,17 +1,16 @@
 class NumberIndicator{
 public:
   NumberIndicator();
-  NumberIndicator(Adafruit_ILI9341 &dsp);
   NumberIndicator(Adafruit_ILI9341 &dsp, int x, int y);
   //Temp(Adafruit_ILI9341 &dsp, int x, int y, GFXfont *font);
-  NumberIndicator(Adafruit_ILI9341 &dsp, int x, int y, GFXfont *font, int size);
+  NumberIndicator(Adafruit_ILI9341 &dsp, int x, int y, const GFXfont *font, int size);
   int getTextWidth();
   int getTextHeight();
   void set(float value);
 private:
   char* deblank(char* origstring);
   Adafruit_ILI9341 *tft;
-  GFXfont *font;
+  const GFXfont *font;
   int W, H, x, y; //display width and height
   int size; //font size
   float oldvalue = 99.9, value = 0;
@@ -28,7 +27,7 @@ public:
   void set(float value);
 private:
   Adafruit_ILI9341 *tft;
-  GFXfont *font;
+  const GFXfont *font;
   NumberIndicator level_value;
   int fontHeight, fontSize;
   int W, H, x, y;
