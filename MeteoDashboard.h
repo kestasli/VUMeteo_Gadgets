@@ -4,14 +4,16 @@ public:
   NumberIndicator(Adafruit_ILI9341 &dsp, int x, int y);
   //Temp(Adafruit_ILI9341 &dsp, int x, int y, GFXfont *font);
   NumberIndicator(Adafruit_ILI9341 &dsp, int x, int y, const GFXfont *font, int size);
-  int getTextWidth();
-  int getTextHeight();
   void set(float value);
+  void setFormat(int comma, char *unit, uint16_t color);
 private:
   char* deblank(char* origstring);
   Adafruit_ILI9341 *tft;
   const GFXfont *font;
   int W, H, x, y; //display width and height
+  char* unitIndicator;
+  uint16_t color;
+  int decimalPlace = 1;
   int size; //font size
   float oldvalue = 99.9, value = 0;
   int16_t  txtX, txtY; //current coordinates of text boudary
@@ -25,6 +27,7 @@ public:
   LevelIndicator();
   LevelIndicator(Adafruit_ILI9341 &dsp, int x, int y, int w, int h, int maxvalue);
   void set(float value);
+  void set(float value, uint16_t color);
 private:
   Adafruit_ILI9341 *tft;
   const GFXfont *font;
@@ -32,8 +35,8 @@ private:
   int fontHeight, fontSize;
   int W, H, x, y;
   int maxvalue = 10;
-  int barWidth = 10, barSpace = 2;
-  int valueCount = 10, textRectHeight = 18;
+  int barWidth = 0, barSpace = 4;
+  int valueCount = 10;
   int averageover = 1; //average over some measures
   int measureslist[20];
 };
