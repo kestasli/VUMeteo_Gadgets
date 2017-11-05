@@ -46,7 +46,8 @@ void NumberIndicator::set(float value){
 
   //convert float to text and get coordinates in the middle of screen
   dtostrf(value, 6, decimalPlace, value_str);
-  char* value_nospc = deblank(value_str);
+  //char* value_nospc = deblank(value_str);
+  char* value_nospc = addUnits(value_str, unitIndicator);
   tft->getTextBounds(value_nospc, 0, 0, &txtX, &txtY, &txtW, &txtH);
   //tft->drawCircle(x + o_txtW + 10, y - o_txtH, 8, ILI9341_BLACK);
   //tft->drawCircle(x + txtW + 10, y - txtH, 8, ILI9341_WHITE);
@@ -83,6 +84,24 @@ char* NumberIndicator::deblank(char* input)
     }
     output[j]=0;
     return output;
+}
+
+char* NumberIndicator::addUnits(char* input, char* unit)
+{
+    int i,j;
+    char outputWithUnits[10];
+
+    char *output=input;
+    for (i = 0, j = 0; i<strlen(input); i++,j++)
+    {
+        if (input[i]!=' ')
+            output[j]=input[i];
+        else
+            j--;
+    }
+    output[j]=0;
+    sprintf(outputWithUnits, "%s %s", output, unit);
+    return outputWithUnits;
 }
 
 LevelIndicator::LevelIndicator(){
@@ -128,28 +147,18 @@ void LevelIndicator::set(float value){
 
   for (int i = 0; i < valueCount; i++){
     if (i < level){
-        tft->fillRect(x + i*(barWidth + barSpace), y, barWidth, H, ILI9341_ORANGE);
-    } else {
-        tft->fillRect(x + i*(barWidth + barSpace), y, barWidth, H, ILI9341_BLACK);
-        tft->drawRect(x + i*(barWidth + barSpace), y, barWidth, H, ILI9341_WHITE);
-    }
-  }
-  level_value.set(value);
-}
-
-void LevelIndicator::set(float value, uint16_t color){
-  if(value > maxvalue){value = maxvalue;}
-
-  double interval = (double)maxvalue/(double)valueCount;
-  int level = (int)(value/interval + 0.5);
-
-  for (int i = 0; i < valueCount; i++){
-    if (i < level){
         tft->fillRect(x + i*(barWidth + barSpace), y, barWidth, H, color);
     } else {
         tft->fillRect(x + i*(barWidth + barSpace), y, barWidth, H, ILI9341_BLACK);
         tft->drawRect(x + i*(barWidth + barSpace), y, barWidth, H, ILI9341_WHITE);
     }
   }
+  level_value.setFormat(decimalPlace, unitIndicator, color);
   level_value.set(value);
+}
+
+void LevelIndicator::setFormat(int decimalPlace0, char *unitIndicator0, uint16_t color0){
+    decimalPlace = decimalPlace0;
+    unitIndicator = unitIndicator0;
+    color = color0;
 }
