@@ -8,11 +8,13 @@ public:
   void setFormat(int comma, char *unit, uint16_t color);
 private:
   char* deblank(char* origstring);
-  char* addUnits(char* origstring, char* units);
+  char* addUnits(char* origstring);
   Adafruit_ILI9341 *tft;
   const GFXfont *font;
   int W, H, x, y; //display width and height
-  char* unitIndicator = "";
+  char unitIndicator[5] = {0};
+  //char *outputWithUnits;
+  char outputWithUnits[10] = {0};
   uint16_t color;
   int decimalPlace = 1;
   int size; //font size
@@ -36,7 +38,7 @@ private:
   int fontHeight, fontSize;
   int W, H, x, y;
   uint16_t color = ILI9341_WHITE;
-  char* unitIndicator = "";
+  char *unitIndicator;
   int decimalPlace = 0;
   int maxvalue = 10;
   int barWidth = 0, barSpace = 4;

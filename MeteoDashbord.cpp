@@ -47,13 +47,13 @@ void NumberIndicator::set(float value){
   //convert float to text and get coordinates in the middle of screen
   dtostrf(value, 6, decimalPlace, value_str);
   //char* value_nospc = deblank(value_str);
-  char* value_nospc = addUnits(value_str, unitIndicator);
+  char* value_nospc = addUnits(value_str);
   tft->getTextBounds(value_nospc, 0, 0, &txtX, &txtY, &txtW, &txtH);
   //tft->drawCircle(x + o_txtW + 10, y - o_txtH, 8, ILI9341_BLACK);
   //tft->drawCircle(x + txtW + 10, y - txtH, 8, ILI9341_WHITE);
 
   //If both coordinates set to 0 then place authomatically top/center
-  if (x == 0 & y == 0){
+  if ((x == 0) & (y == 0)){
     cursorX = (W - txtW)/2;
     cursorY = txtH;
   }
@@ -67,29 +67,15 @@ void NumberIndicator::set(float value){
 
 void NumberIndicator::setFormat(int decimalPlace0, char *unitIndicator0, uint16_t color0){
   decimalPlace = decimalPlace0;
-  unitIndicator = unitIndicator0;
   color = color0;
+  for (int i = 0; i < strlen(unitIndicator0); i++){
+    unitIndicator[i] = unitIndicator0[i];
+  }
 }
 
-char* NumberIndicator::deblank(char* input)
+char* NumberIndicator::addUnits(char* input)
 {
     int i,j;
-    char *output=input;
-    for (i = 0, j = 0; i<strlen(input); i++,j++)
-    {
-        if (input[i]!=' ')
-            output[j]=input[i];
-        else
-            j--;
-    }
-    output[j]=0;
-    return output;
-}
-
-char* NumberIndicator::addUnits(char* input, char* unit)
-{
-    int i,j;
-    char outputWithUnits[10];
 
     char *output=input;
     for (i = 0, j = 0; i<strlen(input); i++,j++)
@@ -99,8 +85,11 @@ char* NumberIndicator::addUnits(char* input, char* unit)
         else
             j--;
     }
+
     output[j]=0;
-    sprintf(outputWithUnits, "%s %s", output, unit);
+
+    sprintf(outputWithUnits, "%s %s", output, unitIndicator);
+    //Serial.println(unitIndicator);
     return outputWithUnits;
 }
 
@@ -124,7 +113,8 @@ LevelIndicator::LevelIndicator(Adafruit_ILI9341 &dsp, int x0, int y0, int W0, in
   uint16_t txtW, txtH;
   //Probe font height for number indicator
   //Only height is important to align text with level indicator
-  tft->getTextBounds("0123456789", 0, 0, &txtX, &txtY, &txtW, &txtH);
+  char sampletext[] = "0123456789";
+  tft->getTextBounds(sampletext, 0, 0, &txtX, &txtY, &txtW, &txtH);
   fontHeight = txtH;
 
   int cursorX = x + valueCount*(barWidth + barSpace) + 10;
