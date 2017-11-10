@@ -5,7 +5,7 @@ public:
   //Temp(Adafruit_ILI9341 &dsp, int x, int y, GFXfont *font);
   NumberIndicator(Adafruit_ILI9341 &dsp, int x, int y, const GFXfont *font, int size);
   void set(float value);
-  void setFormat(int comma, char *unit, uint16_t color);
+  void setFormat(int comma, const char *unit, uint16_t color);
 private:
   char* deblank(char* origstring);
   char* addUnits(char* origstring);
@@ -17,8 +17,9 @@ private:
   char outputWithUnits[10] = {0};
   uint16_t color;
   int decimalPlace = 1;
-  int size; //font size
-  float oldvalue = 99.9, value = 0;
+  int size = 1; //font size
+  float oldvalue = 99.9;
+  float value = 0.0;
   int16_t  txtX, txtY; //current coordinates of text boudary
   uint16_t txtW, txtH; //current coordinates of text boudary
   int16_t  o_txtX = 0, o_txtY = 0; //keep old coordinates of text boundary
@@ -30,7 +31,7 @@ public:
   LevelIndicator();
   LevelIndicator(Adafruit_ILI9341 &dsp, int x, int y, int w, int h, int maxvalue);
   void set(float value);
-  void setFormat(int comma, char *unit, uint16_t color);
+  void setFormat(int comma, const char *unit, uint16_t color);
 private:
   Adafruit_ILI9341 *tft;
   const GFXfont *font;
@@ -38,7 +39,7 @@ private:
   int fontHeight, fontSize;
   int W, H, x, y;
   uint16_t color = ILI9341_WHITE;
-  char *unitIndicator;
+  char unitIndicator[5] = {0};
   int decimalPlace = 0;
   int maxvalue = 10;
   int barWidth = 0, barSpace = 4;
