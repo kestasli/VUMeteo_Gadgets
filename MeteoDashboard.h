@@ -31,6 +31,7 @@ public:
   LevelIndicator();
   LevelIndicator(Adafruit_ILI9341 &dsp, int x, int y, int w, int h, int maxvalue);
   void set(float value);
+  void setAvg(float value);
   void setFormat(int comma, const char *unit, uint16_t color);
 private:
   Adafruit_ILI9341 *tft;
@@ -43,7 +44,7 @@ private:
   int decimalPlace = 0;
   int maxvalue = 10;
   int barWidth = 0, barSpace = 4;
-  int valueCount = 10;
-  int averageover = 1; //average over some measures
-  int measureslist[20];
+  int valueCount = 10; //bar quantity in level indicator
+  float measureList[10] = {0}; //average over array
+  int measureNr = 0;
 };

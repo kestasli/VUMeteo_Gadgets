@@ -1,7 +1,8 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
 #include <MeteoDashboard.h>
-#include <Fonts/FreeSansBold12pt7b.h>
+#include <Fonts/FreeSansBold18pt7b.h>
+//#include <Fonts/FreeMonoBold12pt7b.h>
 //#include <Fonts/FreeSansBold24pt7b.h>
 //#include <Fonts/FreeSansBold56pt7b.h>
 //#include <Fonts/FreeSansBold44pt7b.h>
@@ -101,7 +102,7 @@ LevelIndicator::LevelIndicator(Adafruit_ILI9341 &dsp, int x0, int y0, int W0, in
   tft = &dsp;
   barWidth = W/valueCount - barSpace;
 
-  font = &FreeSansBold12pt7b;
+  font = &FreeSansBold18pt7b;
   fontSize = 1;
   tft->setFont(font);
   tft->setTextSize(fontSize);
@@ -125,6 +126,50 @@ LevelIndicator::LevelIndicator(Adafruit_ILI9341 &dsp, int x0, int y0, int W0, in
 
 void LevelIndicator::set(float value){
   if(value > maxvalue){value = maxvalue;}
+
+  double interval = (double)maxvalue/(double)valueCount;
+  int level = (int)(value/interval + 0.5);
+
+  for (int i = 0; i < valueCount; i++){
+    if (i < level){
+        tft->fillRect(x + i*(barWidth + barSpace), y, barWidth, H, color);
+    } else {
+        tft->fillRect(x + i*(barWidth + barSpace), y, barWidth, H, ILI9341_BLACK);
+        tft->drawRect(x + i*(barWidth + barSpace), y, barWidth, H, ILI9341_WHITE);
+    }
+  }
+
+  level_value.set(value);
+}
+
+void LevelIndicator::setAvg(float value){
+
+  if(value > maxvalue){value = maxvalue;}
+
+  int size = sizeof(measureList)/sizeof(float);
+
+  for (int i = size - 1 ; i > 0 ; i--){
+    measureList[i] = measureList[i - 1];
+  }
+
+  measureList[0] = value;
+  float measureSum = 0;
+
+  for (int i = 0; i < size ; i++){
+    measureSum = measureSum + measureList[i];
+  }
+
+  float average = measureSum/(float)size;
+
+  for (int i = 0; i < size; i++){
+    Serial.print(measureList[i]);
+    Serial.print(", ");
+  }
+  Serial.print("AVG: ");
+  Serial.print(average);
+  Serial.println("");
+
+  value = average;
 
   double interval = (double)maxvalue/(double)valueCount;
   int level = (int)(value/interval + 0.5);
