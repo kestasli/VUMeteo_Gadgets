@@ -23,7 +23,7 @@ private:
   char unitIndicator[5] = {0}; //this is array for measurement units
   char outputWithUnits[10] = {0}; //this holds combined array from value and unit
 
-  float measureList[60] = {0}; //average over array
+  float measureList[20] = {0}; //average over array
   int measureNumber = 0; //this holds measurement number for calc average
 
   uint16_t color = ILI9341_WHITE;
@@ -75,7 +75,7 @@ private:
     const GFXfont *font;
     int x, y, radius, direction, old_direction;
 
-    int measureList[10] = {0}; //average over array
+    int measureList[20] = {0}; //average over array
     int measureNumber = 0; //this holds measurement number for calc average
 
     int old_markerX, old_markerY;

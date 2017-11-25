@@ -117,12 +117,12 @@ float NumberIndicator::getAverage(float value){
   //this can cause indicator refresh every time as two floats will never be the same
 
   average = ((int)(average * 10 ))/ 10.0;
-  /*
+
   for (int i = 0; i < size; i++){
     Serial.print(measureList[i]);
     Serial.print(", ");
   }
-  */
+  
   Serial.print("AVG: ");
   Serial.print(average);
   Serial.print(", ");
@@ -283,6 +283,8 @@ void DirectionIndicator::set(float value0, int direction0){
   value = value0;
 
   int direction = getAngleAverage(direction0);
+
+  //mumbo jumbo to avoid converting coordinate system
   direction = -direction + 180;
   //calc triangle coordinates
 
@@ -318,36 +320,32 @@ int DirectionIndicator::getAngleAverage(int value){
       measureNumber = size;
     }
 
+    //move all existing values one position towards the end
     for (int i = size - 1 ; i > 0 ; i--){
       measureList[i] = measureList[i - 1];
     }
 
+    //add new value in the beginning of array
     measureList[0] = value;
 
-    float s = 0.0;
-    float c = 0.0;
+    float s = 0;
+    float c = 0;
+    float angle_rad;
 
     for (int i = 0; i < measureNumber ; i++){
-      s = s + sin(radianCoef * measureList[i]);
-      c = c + cos(radianCoef * measureList[i]);
-      //measureSum = measureSum + measureList[i];
+      angle_rad = (M_PI * measureList[i])/180;
+      s = s + sin(angle_rad);
+      c = c + cos(angle_rad);
     }
 
-    Serial.println(s);
-    Serial.println(c);
+    s = s/measureNumber;
+    c = c/measureNumber;
 
-    s = s/(float)measureNumber;
-    c = c/(float)measureNumber;
-
-    float average;
-
-    average = atan2(s, c)/radianCoef;
-
-
-    //it is needed to remove unsignificant decimals
-    //as indicator refreshes only if prev value differs from current
-    //this can cause indicator refresh every time as two floats will never be the same
-
+    float average_rad = atan2(s, c);
+    int average_deg = (average_rad * 180)/M_PI;
+    if (average_deg < 0){
+      average_deg = average_deg + 360;
+    }
 
     for (int i = 0; i < size; i++){
       Serial.print(measureList[i]);
@@ -355,10 +353,9 @@ int DirectionIndicator::getAngleAverage(int value){
     }
 
     Serial.print("AVG: ");
-    Serial.print(average);
+    Serial.print(average_deg);
     Serial.print(", ");
     Serial.print(measureNumber);
     Serial.println("");
-
-    return (int)average;
+    return average_deg;
 }
