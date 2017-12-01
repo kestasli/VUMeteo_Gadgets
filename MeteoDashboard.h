@@ -12,8 +12,8 @@ public:
   void set(float value, uint16_t color);
   void setFormat(int comma, const char *unit);
   void setFormat(int comma, const char *unit, bool averaging);
+  float getCurrentValue();
 private:
-  char* deblank(char* origstring);
   char* addUnits(char* origstring);
   float getAverage(float value);
   Adafruit_ILI9341 *tft;

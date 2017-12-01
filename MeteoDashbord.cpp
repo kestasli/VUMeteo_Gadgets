@@ -122,7 +122,7 @@ float NumberIndicator::getAverage(float value){
     Serial.print(measureList[i]);
     Serial.print(", ");
   }
-  
+
   Serial.print("AVG: ");
   Serial.print(average);
   Serial.print(", ");
@@ -151,12 +151,18 @@ char* NumberIndicator::addUnits(char* input)
     return outputWithUnits;
 }
 
+//this stupid function is needed if set to average over values
+float NumberIndicator::getCurrentValue(){
+  return value;
+}
+
 LevelIndicator::LevelIndicator(){
 }
 
 LevelIndicator::LevelIndicator(Adafruit_ILI9341 &dsp, int x0, int y0, int W0, int H0, int maxvalue0){
   x = x0, y = y0, W = W0, H = H0;
   maxvalue = maxvalue0;
+  //tft = &dsp;
   tft = &dsp;
   barWidth = W/valueCount - barSpace;
 
@@ -176,7 +182,7 @@ LevelIndicator::LevelIndicator(Adafruit_ILI9341 &dsp, int x0, int y0, int W0, in
   int cursorX = x + valueCount*(barWidth + barSpace) + 10;
   int cursorY = H + y - fontHeight/2;
   //NumberIndicator(Adafruit_ILI9341 &dsp, int x, int y, GFXfont *font, int size);
-  level_value = NumberIndicator(dsp, cursorX, cursorY, font, fontSize);
+  level_value = NumberIndicator(*tft, cursorX, cursorY, font, fontSize);
 
   //level_value = NumberIndicator(dsp);
 
@@ -259,6 +265,7 @@ DirectionIndicator::DirectionIndicator(){
 
 DirectionIndicator::DirectionIndicator(Adafruit_ILI9341 &dsp, int x0, int y0, int r0, uint16_t color0){
   x = x0, y = y0, radius = r0, color = color0;
+  //tft = &dsp;
   tft = &dsp;
   int W = tft->width();
   int H = tft->height();
@@ -269,7 +276,7 @@ DirectionIndicator::DirectionIndicator(Adafruit_ILI9341 &dsp, int x0, int y0, in
 
   //tft->drawCircle(x, y, radius, color);
   //tft->drawCircle(x, y, radius + 1, color);
-  indicator = NumberIndicator(dsp, x, y, font, ALIGN_VH);
+  indicator = NumberIndicator(*tft, x, y, font, ALIGN_VH);
   indicator.setFormat(1, "", true);
 }
 
@@ -359,3 +366,7 @@ int DirectionIndicator::getAngleAverage(int value){
     Serial.println("");
     return average_deg;
 }
+
+/*
+{'Šiaurės', 'Šiaurės rytų', 'Pietryčių', 'Pietvakarių', 'Vakarų', 'Šiaurės vakarų', 'Rytų', 'Pietų'}
+*/
