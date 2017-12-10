@@ -69,6 +69,7 @@ public:
   void set(float value, int direction);
 private:
     int getAngleAverage(int value);
+    int convertWindDirection(char* direction);
     Adafruit_ILI9341 *tft;
     double radianCoef = 0.0174532925;
     NumberIndicator indicator;
