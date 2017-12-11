@@ -294,14 +294,12 @@ void DirectionIndicator::set(float value0, int direction0){
   //mumbo jumbo to avoid converting coordinate system
   direction = -direction + 180;
   //calc triangle coordinates
-
   int markerX = x + markerInt * sin(direction * radianCoef);
   int markerY = y + markerInt * cos(direction * radianCoef);
   int markerX1 = x + markerExt * sin((direction + markerWidth) * radianCoef);
   int markerY1 = y + markerExt * cos((direction + markerWidth) * radianCoef);
   int markerX2 = x + markerExt * sin((direction - markerWidth) * radianCoef);
   int markerY2 = y + markerExt * cos((direction - markerWidth) * radianCoef);
-
   //remove old marker
   tft->fillTriangle(old_markerX1, old_markerY1, old_markerX2, old_markerY2, old_markerX, old_markerY, ILI9341_BLACK);
   tft->drawCircle(x, y, radius, color);
@@ -368,36 +366,3 @@ int DirectionIndicator::getAngleAverage(int value){
     Serial.println("");
     return average_deg;
 }
-
-int DirectionIndicator::convertWindDirection(char* direction){
-  const char S[] = "Piet\\u0173";
-  const char N[] = "\\u0160iaur\\u0117s";
-  const char E[] = "Ryt\\u0173";
-  const char W[] = "Vakar\\u0173";
-
-  const char NE[] = "\\u0160iaur\\u0117s ryt\\u0173";
-  const char SE[] = "Pietry\\u010di\\u0173";
-  const char SW[] = "Pietvakari\\u0173";
-  const char NW[] = "\\u0160iaur\\u0117s vakar\\u0173";
-
-  if(strcmp(direction, S) == 0) { return 180;}
-  if(strcmp(direction, N) == 0) { return 0;}
-  if(strcmp(direction, E) == 0) { return 90;}
-  if(strcmp(direction, W) == 0) { return 270;}
-  if(strcmp(direction, NE) == 0) { return 45;}
-  if(strcmp(direction, SE) == 0) { return 135;}
-  if(strcmp(direction, SW) == 0) { return 225;}
-  if(strcmp(direction, NW) == 0) { return 315;}
-  return 0;
-}
-
-/*
-Pietry\u010di\u0173 'Pietryčių' 135
-Vakar\u0173 'Vakarų' 270
-\u0160iaur\u0117s 'Šiaurės' 0
-Ryt\u0173 'Rytų' 90
-\u0160iaur\u0117s ryt\u0173 'Šiaurės rytų' 45
-Pietvakari\u0173 'Pietvakarių' 225
-\u0160iaur\u0117s vakar\u0173 'Šiaurės vakarų' 315
-Piet\u0173 'Pietų' 180
-*/
